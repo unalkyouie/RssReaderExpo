@@ -5,18 +5,21 @@ import { RootStackParamList } from '~/navigation/types';
 import useArticlesByFeedUrl from '~/hooks/useArticlesByFeedUrl';
 import { RSSArticle } from '~/types';
 import useReadArticles from '~/hooks/useReadArticles';
-import useFavoritesArticles from '~/hooks/useFavoritesArticles';
+import useFavoriteArticles from '~/hooks/useFavoriteArticles';
 
 export type Props = NativeStackScreenProps<RootStackParamList, 'ArticleList'>;
 
 const ArticleListScreen = ({ navigation, route }: Props) => {
-  const { url, title } = route.params;
-  const { data: articles, isLoading, isError } = useArticlesByFeedUrl(url);
+  const { url, title, feedId } = route.params;
+  const isFavoritesFeed = feedId === 'favorites';
 
   const { markAsRead, isArticleRead } = useReadArticles();
-  const { isFavorite, toggleFavorite } = useFavoritesArticles();
+  const { favorites, toggleFavorite, isFavorite } = useFavoriteArticles();
 
-  const [showOnlyUnread, setShowOnlyUnread] = useState(false); 
+  const { data: fetchedArticles, isLoading, isError } = useArticlesByFeedUrl(url);
+  const articles = isFavoritesFeed ? favorites : fetchedArticles;
+
+  const [showOnlyUnread, setShowOnlyUnread] = useState(false);
 
   const handlePressArticle = (article: RSSArticle) => {
     navigation.navigate('Article', {
@@ -42,8 +45,8 @@ const ArticleListScreen = ({ navigation, route }: Props) => {
 
       <Button title="Back" onPress={() => navigation.goBack()} />
 
-      {isLoading && <Text>Loading...</Text>}
-      {isError && <Text>Failed to fetch articles.</Text>}
+      {isLoading && !isFavoritesFeed && <Text>Loading...</Text>}
+      {isError && !isFavoritesFeed && <Text>Failed to fetch articles.</Text>}
 
       <FlatList
         data={filteredArticles}

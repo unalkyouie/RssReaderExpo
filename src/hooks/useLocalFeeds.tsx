@@ -7,8 +7,13 @@ export const useFeeds = () => {
     queryKey: ['feeds'],
     queryFn: async () => {
       const raw = storage.getString(STORAGE_KEY_FEEDS);
-      return raw ? JSON.parse(raw) : [];
-    },
+      const favoritesFeed = {
+        id: 'favorites',
+        title: 'My Favorite Articles',
+        url: '',
+      };
+      
+      return [...(raw ? JSON.parse(raw) : []), favoritesFeed];    },
   });
 };
 
