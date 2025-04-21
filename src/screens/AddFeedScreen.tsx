@@ -1,25 +1,43 @@
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import React from "react";
-import { Button, Text, View } from "react-native";
+import React, { useState } from 'react';
+import { View, TextInput, Button, Text } from 'react-native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '~/navigation/types';
+import { useAddFeed } from '~/hooks/useLocalFeeds';
+import { RSSFeed } from '~/types';
+import { nanoid } from 'nanoid/non-secure';
 
-import { RootStackParamList } from "../navigation/types";
+type Props = NativeStackScreenProps<RootStackParamList, 'AddFeed'>;
 
-type Props = NativeStackScreenProps<RootStackParamList, "AddFeed">;
+const AddFeedScreen = ({ navigation }: Props) => {
+  const [title, setTitle] = useState('');
+  const [url, setUrl] = useState('');
+  const { mutate } = useAddFeed();
 
-export default function AddFeedScreen({ navigation }: Props) {
+  const handleAdd = () => {
+    const newFeed: RSSFeed = { id: nanoid(), title, url };
+    mutate(newFeed, {
+      onSuccess: () => navigation.goBack(),
+    });
+  };
+
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text testID="add-feed-title">Add Feed Screen</Text>
-      <Button
-        title="Go to Article"
-        onPress={() =>
-          navigation.navigate("Article", {
-            url: "https://example.com",
-            title: "Example",
-          })
-        }
-        testID="button-view-article"
+    <View>
+      <Text>Add Feed</Text>
+      <TextInput
+        placeholder="Title"
+        value={title}
+        onChangeText={setTitle}
+        testID="feed-title-input"
       />
+      <TextInput
+        placeholder="URL"
+        value={url}
+        onChangeText={setUrl}
+        testID="feed-url-input"
+      />
+      <Button title="Save" onPress={handleAdd} testID="feed-save-button" />
     </View>
   );
-}
+};
+
+export default AddFeedScreen;
