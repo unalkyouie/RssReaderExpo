@@ -1,34 +1,29 @@
-import { QueryClientProvider } from "@tanstack/react-query";
-import { fireEvent, render } from "@testing-library/react-native";
-import {
-  mockedNavigationProps,
-  MockedNavigator,
-} from "jest/__mocks__/MockedNavigator.mock";
-import { createQueryClient } from "jest/__mocks__/mockQueryClient";
-import React from "react";
+import React from 'react';
+import { render, fireEvent } from '@testing-library/react-native';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import AddFeedScreen from '../AddFeedScreen';
+import { MockedNavigator, mockedNavigationProps } from 'jest/__mocks__/MockedNavigator.mock';
 
-import AddFeedScreen from "../AddFeedScreen";
+const createWrapper = (children: React.ReactNode) => {
+  const client = new QueryClient();
+  return (
+    <QueryClientProvider client={client}>
+      <MockedNavigator>{children}</MockedNavigator>
+    </QueryClientProvider>
+  );
+};
 
-describe("AddFeedScreen", () => {
-  it("renders title and navigates to Article with params", () => {
-    const queryClient = createQueryClient();
-    const { navigation, route } = mockedNavigationProps<"AddFeed">(undefined);
-
+describe('AddFeedScreen', () => {
+  it('adds feed and navigates back', () => {
+    const { navigation, route } = mockedNavigationProps<'AddFeed'>(undefined);
     const { getByTestId } = render(
-      <QueryClientProvider client={queryClient}>
-        <MockedNavigator>
-          <AddFeedScreen navigation={navigation} route={route} />
-        </MockedNavigator>
-      </QueryClientProvider>,
+      createWrapper(<AddFeedScreen navigation={navigation} route={route} />)
     );
 
-    expect(getByTestId("add-feed-title").props.children).toBe(
-      "Add Feed Screen",
-    );
-    fireEvent.press(getByTestId("button-view-article"));
-    expect(navigation.navigate).toHaveBeenCalledWith("Article", {
-      url: "https://example.com",
-      title: "Example",
-    });
+    fireEvent.changeText(getByTestId('feed-title-input'), 'Test Feed');
+    fireEvent.changeText(getByTestId('feed-url-input'), 'https://test.com');
+    fireEvent.press(getByTestId('feed-save-button'));
+
+    expect(navigation.goBack).toHaveBeenCalled();
   });
 });

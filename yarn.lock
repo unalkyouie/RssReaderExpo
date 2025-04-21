@@ -2579,7 +2579,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:^19.1.2":
+"@types/react-test-renderer@npm:^19.1.0":
+  version: 19.1.0
+  resolution: "@types/react-test-renderer@npm:19.1.0"
+  dependencies:
+    "@types/react": "npm:*"
+  checksum: 10c0/799654e430df10aeaf267d71507fb64ec151359ead7e3774111bfd4abce7e0911dba461811195c06c22a6d17496ea92537d3185320ff4112fe29954cad1b9152
+  languageName: node
+  linkType: hard
+
+"@types/react@npm:*, @types/react@npm:^19.1.2":
   version: 19.1.2
   resolution: "@types/react@npm:19.1.2"
   dependencies:
@@ -4573,6 +4582,15 @@ __metadata:
   bin:
     eslint-config-prettier: bin/cli.js
   checksum: 10c0/c22c8e29193cc8fd70becf1c2dd072513f2b3004a175c2a49404c79d1745ba4dc0edc2afd00d16b0e26d24f95813a0469e7445a25104aec218f6d84cdb1697e9
+  languageName: node
+  linkType: hard
+
+"eslint-import-resolver-alias@npm:^1.1.2":
+  version: 1.1.2
+  resolution: "eslint-import-resolver-alias@npm:1.1.2"
+  peerDependencies:
+    eslint-plugin-import: ">=1.4.0"
+  checksum: 10c0/71f156e131242db509fe1cfdb410cca665cc9c6e4201e20609689016414e3c6c0b9df27a74b83367694b8ccc5f41687abde26b6cd2c96f961ba16152aca40e43
   languageName: node
   linkType: hard
 
@@ -9365,10 +9383,12 @@ __metadata:
     "@testing-library/react-native": "npm:12.0.0"
     "@types/jest": "npm:29.0.0"
     "@types/react": "npm:^19.1.2"
+    "@types/react-test-renderer": "npm:^19.1.0"
     "@typescript-eslint/eslint-plugin": "npm:8.30.1"
     "@typescript-eslint/parser": "npm:8.30.1"
     eslint: "npm:9.25.0"
     eslint-config-prettier: "npm:10.1.2"
+    eslint-import-resolver-alias: "npm:^1.1.2"
     eslint-plugin-import: "npm:2.31.0"
     eslint-plugin-jest: "npm:28.11.0"
     eslint-plugin-prettier: "npm:5.2.6"

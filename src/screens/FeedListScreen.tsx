@@ -1,20 +1,46 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React from "react";
-import { Button, Text, View } from "react-native";
+import { Button, FlatList, Text, TouchableOpacity, View } from "react-native";
+
+import { useFeeds } from "~/hooks/useLocalFeeds";
 
 import { RootStackParamList } from "../navigation/types";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Feeds">;
 
-export default function FeedListScreen({ navigation }: Props) {
+const FeedListScreen = ({ navigation }: Props) => {
+  const { data: feeds = [] } = useFeeds();
+
+  const handlePressFeed = (feed: any) => {
+    navigation.navigate("Article", {
+      url: feed.url,
+      title: feed.title,
+    });
+  };
+
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text testID="feed-list-title">Feed List Screen</Text>
+    <View testID="feed-list-screen">
+      <Text testID="feed-list-title">Your Feeds</Text>
       <Button
-        title="Go to Add Feed"
+        testID="add-feed-button"
+        title="Add Feed"
         onPress={() => navigation.navigate("AddFeed")}
-        testID="button-add-feed"
+      />
+      <FlatList
+        testID="feed-list"
+        data={feeds}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            onPress={() => handlePressFeed(item)}
+            testID={`feed-item-${item.id}`}
+          >
+            <Text>{item.title}</Text>
+          </TouchableOpacity>
+        )}
       />
     </View>
   );
-}
+};
+
+export default FeedListScreen;
