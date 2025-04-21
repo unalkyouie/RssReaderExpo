@@ -15,7 +15,7 @@ const loadFeedsWithFavorites = async (): Promise<RSSFeed[]> => {
   const feeds: RSSFeed[] = raw ? JSON.parse(raw) : [];
   const hasFavorites = feeds.some((f) => f.id === FAVORITES_FEED.id);
 
-  return hasFavorites ? feeds : [...feeds, FAVORITES_FEED];
+  return hasFavorites ? feeds : [FAVORITES_FEED, ...feeds];
 };
 
 const saveFeeds = async (feeds: RSSFeed[]) => {

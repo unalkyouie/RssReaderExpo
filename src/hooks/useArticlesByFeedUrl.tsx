@@ -22,15 +22,25 @@ const parseRssFeed = (xmlText: string): RSSArticle[] => {
     : [];
 };
 
+const withProxy = (url: string) =>
+  `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+
 const useArticlesByFeedUrl = (url: string) => {
   return useQuery<RSSArticle[]>({
     queryKey: ['articles', url],
-    queryFn: async () => {
-      const response = await fetch(url);
-      const text = await response.text();
-      return parseRssFeed(text);
-    },
     enabled: !!url,
+    queryFn: async () => {
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('Fetch failed');
+        const text = await res.text();
+        return parseRssFeed(text);
+      } catch (err) {
+        const res = await fetch(withProxy(url));
+        const text = await res.text();
+        return parseRssFeed(text);
+      }
+    },
   });
 };
 

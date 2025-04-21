@@ -23,10 +23,9 @@ GOAL:local storageof RSS subscriptions with clean UX.
 - [x] screen: add new feed
 - [x] screen: article details
 - [x] parse RSS data 
-- [ ] tests for hooks and components
+- [ ] tests for hooks and components - X FAIL < I need to improve in this part 
 
 ## Challenges: 
-- testing MMKV-based hooks in Expo
 - parsing RSS without relaying on  node-specific packages
 - in-app browser for article reading ?
 - adding feeds: (toast, alert, inline) 
