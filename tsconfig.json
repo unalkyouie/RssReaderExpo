@@ -12,8 +12,8 @@
     "resolveJsonModule": true,
     "allowJs": true,
     "baseUrl": ".",
-    "paths": { "@/*": ["src/*"] }
+    "paths": { "~/*": ["src/*"], "jest/*": ["jest/*"]  }
   },
-  "include": ["src", "index.ts", "App.tsx"],
-  "exclude": ["node_modules", "babel.config.js", "metro.config.js"]
+  "include": ["src", "index.ts", "src/App.tsx"],
+  "exclude": ["node_modules", "babel.config.js", "eslint.config.js", "jest.config.js"]
 }
