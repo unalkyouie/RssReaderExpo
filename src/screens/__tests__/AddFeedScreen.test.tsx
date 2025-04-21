@@ -1,8 +1,12 @@
-import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import AddFeedScreen from '../AddFeedScreen';
-import { MockedNavigator, mockedNavigationProps } from 'jest/__mocks__/MockedNavigator.mock';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { fireEvent, render } from "@testing-library/react-native";
+import {
+  mockedNavigationProps,
+  MockedNavigator,
+} from "jest/__mocks__/MockedNavigator.mock";
+import React from "react";
+
+import AddFeedScreen from "../AddFeedScreen";
 
 const createWrapper = (children: React.ReactNode) => {
   const client = new QueryClient();
@@ -13,16 +17,16 @@ const createWrapper = (children: React.ReactNode) => {
   );
 };
 
-describe('AddFeedScreen', () => {
-  it('adds feed and navigates back', () => {
-    const { navigation, route } = mockedNavigationProps<'AddFeed'>(undefined);
+describe("AddFeedScreen", () => {
+  it("adds feed and navigates back", () => {
+    const { navigation, route } = mockedNavigationProps<"AddFeed">({});
     const { getByTestId } = render(
-      createWrapper(<AddFeedScreen navigation={navigation} route={route} />)
+      createWrapper(<AddFeedScreen navigation={navigation} route={route} />),
     );
 
-    fireEvent.changeText(getByTestId('feed-title-input'), 'Test Feed');
-    fireEvent.changeText(getByTestId('feed-url-input'), 'https://test.com');
-    fireEvent.press(getByTestId('feed-save-button'));
+    fireEvent.changeText(getByTestId("feed-title-input"), "Test Feed");
+    fireEvent.changeText(getByTestId("feed-url-input"), "https://test.com");
+    fireEvent.press(getByTestId("feed-save-button"));
 
     expect(navigation.goBack).toHaveBeenCalled();
   });
