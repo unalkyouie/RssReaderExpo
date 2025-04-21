@@ -1,102 +1,97 @@
-# 🚀 RSS Reader Expo App
+# 📲 RSS Reader – Expo Mobile App
 
-**Original web version:** [unalkyouie/rss-reader-web](https://github.com/unalkyouie/rss-reader-web)
+**Web version**: [unalkyouie/rss-reader-web](https://github.com/unalkyouie/rss-reader-web)  
+**Mobile version (this repo)**: Offline-friendly RSS Reader built with **Expo**, **React Native**, **MMKV** and **React Query**.
 
-A mobile continuation of the web-based RSS Reader: local storage of subscriptions, offline cache, and a clean UX, built with Expo.
+> 🧪 Currently under testing — feel free to try it on your phone via Expo Go.
 
 ---
 
-## 📦 Initial setup
+## 🚀 Preview App (Expo Go)
 
-1. Clone this repository:
+To test the app on your mobile device:
+
+1. **Install [Expo Go](https://expo.dev/client)** (iOS/Android)
+2. Open this link on your phone or scan the QR code inside Expo Go:
+
+👉 [Launch the app](https://expo.dev/accounts/unalkyouie/projects/RssReader/updates/35c0dcc3-932b-464f-880b-e3f786a3f98b)
+
+> Expo Go will load the app and cache it. You can reopen it anytime later from within the app.
+
+---
+
+## 🛠️ Local Development Setup
+
+1. **Clone the repository**:
    ```bash
    git clone https://github.com/unalkyouie/RssReaderExpo.git
    cd RssReaderExpo
    ```
-2. Install dependencies:
+
+2. **Install dependencies**:
    ```bash
    yarn install
    ```
-3. Start the Expo development server:
+
+3. **Start the development server**:
    ```bash
    yarn start
    ```
-4. Open on your device or simulator:
-   - Scan the QR code with Expo Go (iOS/Android)
-   - Or run:
+
+4. **Open the app**:
+   - Mobile: Scan the QR code in terminal with Expo Go
+   - Emulator/simulator:
      ```bash
      yarn android
      yarn ios
+     ```
+   - Web:
+     ```bash
      yarn web
      ```
 
-### 📱 Viewing in Expo Go
+---
 
-1. Install the **Expo Go** app from the App Store (iOS) or Google Play Store (Android).
-2. Ensure your computer and mobile device are on the **same local network**.
-3. When the Expo Metro Bundler starts, a QR code will appear in your terminal or browser.
-4. Open **Expo Go**, tap “Scan QR Code”, and point your camera at the code.
-5. The app will load automatically in Expo Go; you can reload with ⌘+R (iOS) or double tap R (Android).
+## 🧠 Features
+
+- ✅ **Add/Edit/Delete** custom RSS feeds
+- ⭐️ **Favorite** articles (saved offline)
+- ✅ **Mark as Read** state for articles
+- 🧠 **Local storage** using [react-native-mmkv](https://github.com/mrousavy/react-native-mmkv)
+- ⚡ **Data fetching & caching** via [React Query](https://tanstack.com/query/v4)
+- 🧭 **Navigation** with React Navigation Stack
+- 🪟 **In-app article reader** via WebView
+- 🌿 Clean, responsive UI with **UI Kitten** and glassmorphism-inspired styling
 
 ---
 
-## 🔧 What’s already here (from the web version)
+## ☁️ Deployment (for development/testing)
 
-- **Local persistence** of RSS feed URLs via `usePersistedFeeds` hook
-- **Data caching** and fetching with React Query
-- **Component & hook tests** (Jest + Testing Library)
-- Basic UI wireframe and navigation
+We're using **EAS Update** to share new versions instantly:
 
-## 🚀 Hosting & Distribution
-
-You don’t need to submit the app to the App Store or Google Play to share it with testers or users:
-
-### 1. Expo Publish (OTA)
-
-- Use Over-the-Air updates (OTA):
+- Push a new OTA update:
   ```bash
-  expo publish --release-channel production
+  eas update --branch preview
   ```
-- After publishing, you’ll get a link to open in Expo Go, for example:
+- After deployment, a new URL will be available like:
   ```
-  https://expo.dev/@unalkyouie/rssreader?release-channel=production
+  https://expo.dev/accounts/<your-user>/projects/RssReader/updates/<update-id>
   ```
-- Users can paste this link in Expo Go to load your app.
-
-### 2. EAS Build + Internal Distribution
-
-- Configure EAS:
-  ```bash
-  eas build:configure
-  ```
-- Build binaries on Expo servers:
-  ```bash
-  eas build --platform android
-  eas build --platform ios
-  ```
-- Share the generated APK/IPA links via Slack, email, etc.
-
-### 3. Web / PWA
-
-- Export a web build:
-  ```bash
-  expo build:web
-  ```
-- Deploy the contents of the `web-build/` folder to Netlify, Vercel, GitHub Pages, or any static host.
 
 ---
 
-## 📚 Resources
+## 📚 Stack
 
-- Expo documentation: https://docs.expo.dev
-- React Native MMKV: https://github.com/mrousavy/react-native-mmkv
-- TanStack React Query: https://tanstack.com/query/v4
-- React Navigation: https://reactnavigation.org
-- rss-parser: https://github.com/rbren/rss-parser
+- **Expo SDK**
+- **React Native**
+- **MMKV** (superfast local storage)
+- **React Query**
+- **React Navigation**
+- **UI Kitten**
+- **RSS XML parsing** via `fast-xml-parser`
 
 ---
 
-## ⚖️ License
+## 📜 License
 
 MIT © Aleksandra Pikus
-
