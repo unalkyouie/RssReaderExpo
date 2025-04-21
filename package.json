@@ -4,21 +4,76 @@
   "main": "index.ts",
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web"
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "web": "expo start --web",
+    "clean:watchman": "watchman watch-del-all",
+    "clean:packages": "rm -rf node_modules yarn.lock && yarn install",
+    "clean:all": "yarn clean:watchman &&  yarn clean:packages",
+    "test": "jest",
+    "test:watch": "jest --watchAll",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "type-check": "tsc --noEmit",
+    "prepare": "husky install"
   },
   "dependencies": {
+    "@react-navigation/native": "6.1.0",
+    "@react-navigation/native-stack": "6.9.12",
+    "@tanstack/react-query": "5.74.4",
     "expo": "~52.0.46",
     "expo-status-bar": "~2.0.1",
     "react": "18.3.1",
-    "react-native": "0.76.9"
+    "react-native": "0.76.9",
+    "react-native-mmkv": "1.0.0",
+    "react-native-webview": "11.26.0",
+    "rss-parser": "3.12.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.25.2",
-    "@types/react": "~18.3.12",
-    "typescript": "^5.3.3"
+    "@babel/core": "7.25.2",
+    "@testing-library/jest-native": "5.0.0",
+    "@testing-library/react-native": "12.0.0",
+    "@types/jest": "29.0.0",
+    "@typescript-eslint/eslint-plugin": "5.0.0",
+    "@typescript-eslint/parser": "5.0.0",
+    "eslint": "8.0.0",
+    "eslint-plugin-react": "7.30.0",
+    "eslint-plugin-react-native": "4.0.0",
+    "husky": "8.0.0",
+    "jest": "29.5.0",
+    "lint-staged": "13.0.0",
+    "prettier": "3.5.3",
+    "react-test-renderer": "18.3.1",
+    "typescript": "5.3.3"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "npm test"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "jest": {
+    "preset": "react-native",
+    "setupFiles": [
+      "<rootDir>/jest/setup.js"
+    ],
+    "setupFilesAfterEnv": [
+      "@testing-library/jest-native/extend-expect"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!(react-native|@react-native|@react-navigation)/)"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/android/",
+      "/ios/"
+    ]
   },
   "private": true,
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  "packageManager": "yarn@4.9.0"
 }
