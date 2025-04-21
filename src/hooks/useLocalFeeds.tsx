@@ -1,21 +1,31 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import * as SecureStore from 'expo-secure-store';
+import { RSSFeed } from '~/types';
 
-import { RSSFeed } from "~/types";
-import { storage, STORAGE_KEY_FEEDS } from "~/utils/Storage";
+export const STORAGE_KEY_FEEDS = 'rss_feeds';
+
+const FAVORITES_FEED: RSSFeed = {
+  id: 'favorites',
+  title: 'My Favorite Articles',
+  url: '',
+};
+
+const loadFeedsWithFavorites = async (): Promise<RSSFeed[]> => {
+  const raw = await SecureStore.getItemAsync(STORAGE_KEY_FEEDS);
+  const feeds: RSSFeed[] = raw ? JSON.parse(raw) : [];
+  const hasFavorites = feeds.some((f) => f.id === FAVORITES_FEED.id);
+
+  return hasFavorites ? feeds : [FAVORITES_FEED, ...feeds];
+};
+
+const saveFeeds = async (feeds: RSSFeed[]) => {
+  await SecureStore.setItemAsync(STORAGE_KEY_FEEDS, JSON.stringify(feeds));
+};
 
 export const useFeeds = () => {
   return useQuery<RSSFeed[]>({
-    queryKey: ["feeds"],
-    queryFn: async () => {
-      const raw = storage.getString(STORAGE_KEY_FEEDS);
-      const favoritesFeed = {
-        id: "favorites",
-        title: "My Favorite Articles",
-        url: "",
-      };
-
-      return [...(raw ? JSON.parse(raw) : []), favoritesFeed];
-    },
+    queryKey: ['feeds'],
+    queryFn: loadFeedsWithFavorites,
   });
 };
 
@@ -24,13 +34,16 @@ export const useAddFeed = () => {
 
   return useMutation({
     mutationFn: async (newFeed: RSSFeed) => {
-      const raw = storage.getString(STORAGE_KEY_FEEDS);
-      const feeds = raw ? JSON.parse(raw) : [];
+      const feeds = (await loadFeedsWithFavorites()).filter(
+        (f) => f.id !== FAVORITES_FEED.id
+      );
       const updated = [...feeds, newFeed];
-      storage.set(STORAGE_KEY_FEEDS, JSON.stringify(updated));
+      await saveFeeds(updated);
       return updated;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["feeds"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['feeds'] });
+    },
   });
 };
 
@@ -39,15 +52,18 @@ export const useEditFeed = () => {
 
   return useMutation({
     mutationFn: async (updatedFeed: RSSFeed) => {
-      const raw = storage.getString(STORAGE_KEY_FEEDS);
-      const feeds = raw ? JSON.parse(raw) : [];
-      const updated = feeds.map((f: RSSFeed) =>
-        f.id === updatedFeed.id ? updatedFeed : f,
+      const feeds = (await loadFeedsWithFavorites()).filter(
+        (f) => f.id !== FAVORITES_FEED.id
       );
-      storage.set(STORAGE_KEY_FEEDS, JSON.stringify(updated));
+      const updated = feeds.map((f) =>
+        f.id === updatedFeed.id ? updatedFeed : f
+      );
+      await saveFeeds(updated);
       return updated;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["feeds"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['feeds'] });
+    },
   });
 };
 
@@ -56,12 +72,14 @@ export const useDeleteFeed = () => {
 
   return useMutation({
     mutationFn: async (feedId: string) => {
-      const raw = storage.getString(STORAGE_KEY_FEEDS);
-      const feeds = raw ? JSON.parse(raw) : [];
-      const updated = feeds.filter((f: RSSFeed) => f.id !== feedId);
-      storage.set(STORAGE_KEY_FEEDS, JSON.stringify(updated));
-      return updated;
+      const feeds = (await loadFeedsWithFavorites()).filter(
+        (f) => f.id !== feedId && f.id !== FAVORITES_FEED.id
+      );
+      await saveFeeds(feeds);
+      return feeds;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["feeds"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['feeds'] });
+    },
   });
 };

@@ -3,6 +3,7 @@
     "name": "RssReader",
     "slug": "RssReader",
     "version": "1.0.0",
+    "entryPoint": "./index.ts" ,
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -10,16 +11,18 @@
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#FFFFFFF"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.RssReader"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
+        "backgroundColor": "#A7D7CD"
+      },
+      "package": "com.anonymous.RssReader"
     },
     "web": {
       "favicon": "./assets/favicon.png"

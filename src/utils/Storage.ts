@@ -1,36 +1,32 @@
-import { MMKV } from "react-native-mmkv";
+import * as SecureStore from 'expo-secure-store';
+import { RSSFeed } from '~/types';
 
-import { RSSFeed } from "~/types";
+export const STORAGE_KEY_FEEDS = 'rss_feeds';
 
-export const storage = new MMKV({
-  id: "rss-expo-app",
-  encryptionKey: "rss-expo-app",
-});
-
-export const STORAGE_KEY_FEEDS = "rss_feeds";
-
-export const getStoredFeeds = (): RSSFeed[] => {
-  const raw = storage.getString(STORAGE_KEY_FEEDS);
+export const getStoredFeeds = async (): Promise<RSSFeed[]> => {
+  const raw = await SecureStore.getItemAsync(STORAGE_KEY_FEEDS);
   return raw ? JSON.parse(raw) : [];
 };
 
-export const saveFeeds = (feeds: RSSFeed[]) => {
-  storage.set(STORAGE_KEY_FEEDS, JSON.stringify(feeds));
+export const saveFeeds = async (feeds: RSSFeed[]) => {
+  await SecureStore.setItemAsync(STORAGE_KEY_FEEDS, JSON.stringify(feeds));
 };
 
-export const addFeed = (feed: RSSFeed) => {
-  const feeds = getStoredFeeds();
-  saveFeeds([...feeds, feed]);
+export const addFeed = async (feed: RSSFeed) => {
+  const feeds = await getStoredFeeds();
+  await saveFeeds([...feeds, feed]);
 };
 
-export const editFeed = (id: string, updated: Partial<RSSFeed>) => {
-  const feeds = getStoredFeeds().map((f) =>
-    f.id === id ? { ...f, ...updated } : f,
+export const editFeed = async (id: string, updated: Partial<RSSFeed>) => {
+  const feeds = await getStoredFeeds();
+  const updatedFeeds = feeds.map((f) =>
+    f.id === id ? { ...f, ...updated } : f
   );
-  saveFeeds(feeds);
+  await saveFeeds(updatedFeeds);
 };
 
-export const deleteFeed = (id: string) => {
-  const feeds = getStoredFeeds().filter((f) => f.id !== id);
-  saveFeeds(feeds);
+export const deleteFeed = async (id: string) => {
+  const feeds = await getStoredFeeds();
+  const updatedFeeds = feeds.filter((f) => f.id !== id);
+  await saveFeeds(updatedFeeds);
 };

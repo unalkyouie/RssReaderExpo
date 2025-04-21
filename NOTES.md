@@ -17,16 +17,15 @@ GOAL:local storageof RSS subscriptions with clean UX.
 - [x] install and set up MMKV
 - [x] install and set up React Query
 - [x] configure QueryClientProvider
-- [ ] implement usePersistedFeeds using MMKV
+- [x] implement usePersistedFeeds using MMKV
 - [x] screen: list of subscribed feeds
-- [ ] screen: articles list
+- [x] screen: articles list
 - [x] screen: add new feed
-- [ ] screen: article details
-- [ ] parse RSS data 
-- [ ] tests for hooks and components
+- [x] screen: article details
+- [x] parse RSS data 
+- [ ] tests for hooks and components - X FAIL < I need to improve in this part 
 
 ## Challenges: 
-- testing MMKV-based hooks in Expo
 - parsing RSS without relaying on  node-specific packages
 - in-app browser for article reading ?
 - adding feeds: (toast, alert, inline) 

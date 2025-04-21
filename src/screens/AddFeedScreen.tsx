@@ -1,15 +1,22 @@
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import React, { useEffect, useState } from "react";
-import { Alert, Button, Text, TextInput, View } from "react-native";
-
-import { useAddFeed, useEditFeed } from "~/hooks/useLocalFeeds";
+import React, { useState, useEffect } from "react";
+import { Alert, StyleSheet } from "react-native";
+import {
+  Layout,
+  Text,
+  Input,
+  Button,
+  Card,
+} from "@ui-kitten/components";
 import { RootStackParamList } from "~/navigation/types";
+import { useAddFeed, useEditFeed } from "~/hooks/useLocalFeeds";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { globalLayoutStyles } from "~/theme/layout";
+import { globalFormStyles } from "~/theme/forms";
 
 type Props = NativeStackScreenProps<RootStackParamList, "AddFeed">;
 
 const AddFeedScreen = ({ navigation, route }: Props) => {
   const feedToEdit = route.params?.feed;
-
   const [title, setTitle] = useState("");
   const [url, setUrl] = useState("");
 
@@ -37,7 +44,6 @@ const AddFeedScreen = ({ navigation, route }: Props) => {
       Alert.alert("Validation", "Both fields are required.");
       return;
     }
-
     if (!validateUrl(url)) {
       Alert.alert("Validation", "Please enter a valid URL.");
       return;
@@ -53,40 +59,38 @@ const AddFeedScreen = ({ navigation, route }: Props) => {
   };
 
   return (
-    <View style={{ flex: 1, padding: 16 }}>
-      <Text style={{ fontSize: 20, marginBottom: 16 }}>
-        {feedToEdit ? "Edit Feed" : "Add Feed"}
-      </Text>
-
-      <TextInput
-        placeholder="Feed title"
-        value={title}
-        onChangeText={setTitle}
-        style={{
-          borderWidth: 1,
-          borderColor: "#ccc",
-          padding: 8,
-          marginBottom: 12,
-        }}
-      />
-      <TextInput
-        placeholder="Feed URL"
-        value={url}
-        onChangeText={setUrl}
-        autoCapitalize="none"
-        keyboardType="url"
-        style={{
-          borderWidth: 1,
-          borderColor: "#ccc",
-          padding: 8,
-          marginBottom: 12,
-        }}
-      />
-
-      <Button title="Save" onPress={handleSave} />
-      <View style={{ height: 10 }} />
-      <Button title="Cancel" color="gray" onPress={() => navigation.goBack()} />
-    </View>
+    <Layout style={globalLayoutStyles.screen}>
+      <Card style={globalFormStyles.card}>
+        <Text category="h5" style={globalFormStyles.title}>
+          {feedToEdit ? "Edit Feed" : "Add Feed"}
+        </Text>
+        <Input
+          label="Title"
+          value={title}
+          onChangeText={setTitle}
+          style={globalFormStyles.input}
+        />
+        <Input
+          label="URL"
+          value={url}
+          onChangeText={setUrl}
+          autoCapitalize="none"
+          keyboardType="url"
+          style={globalFormStyles.input}
+        />
+        <Button onPress={handleSave} style={globalFormStyles.button}>
+          Save
+        </Button>
+        <Button
+          appearance="ghost"
+          status="basic"
+          onPress={() => navigation.goBack()}
+          style={globalFormStyles.button}
+        >
+          Cancel
+        </Button>
+      </Card>
+    </Layout>
   );
 };
 

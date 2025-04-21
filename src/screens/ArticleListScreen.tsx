@@ -1,19 +1,29 @@
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import React, { useRef, useState } from "react";
-import { Button, FlatList, Text, TouchableOpacity, View } from "react-native";
+import React, { useState, useRef } from "react";
+import {
+  Layout,
+  Text,
+  Icon,
+  Button,
+  List,
+  ListItem,
+  Spinner,
+  Card,
+} from "@ui-kitten/components";
+import { StyleSheet, TouchableOpacity } from "react-native";
 
-import useArticlesByFeedUrl from "~/hooks/useArticlesByFeedUrl";
-import useFavoriteArticles from "~/hooks/useFavoriteArticles";
-import useReadArticles from "~/hooks/useReadArticles";
 import { RootStackParamList } from "~/navigation/types";
-import { RSSArticle } from "~/types";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import useArticlesByFeedUrl from "~/hooks/useArticlesByFeedUrl";
+import useReadArticles from "~/hooks/useReadArticles";
+import useFavoriteArticles from "~/hooks/useFavoriteArticles";
+import { RSSArticle, RSSFeed } from "~/types";
+import { globalLayoutStyles } from "~/theme/layout";
 
 export type Props = NativeStackScreenProps<RootStackParamList, "ArticleList">;
 
 const ArticleListScreen = ({ navigation, route }: Props) => {
   const { url, title, feedId } = route.params;
   const isFavoritesFeed = feedId === "favorites";
-
   const { markAsRead, isArticleRead } = useReadArticles();
   const { favorites, toggleFavorite, isFavorite } = useFavoriteArticles();
 
@@ -24,84 +34,121 @@ const ArticleListScreen = ({ navigation, route }: Props) => {
     refetch,
     isFetching,
   } = useArticlesByFeedUrl(url);
+
   const articles = isFavoritesFeed ? favorites : fetchedArticles;
 
   const [showOnlyUnread, setShowOnlyUnread] = useState(false);
-
-  const handlePressArticle = (article: RSSArticle) => {
-    navigation.navigate("Article", {
-      title: article.title,
-      url: article.url,
-    });
-    markAsRead(article);
-  };
-
   const filteredArticles = showOnlyUnread
     ? articles?.filter((a) => !isArticleRead(a.id))
     : articles;
 
-  const listRef = useRef<FlatList<RSSArticle>>(null);
-
-  const scrollToTop = () => {
-    listRef.current?.scrollToOffset({ animated: true, offset: 0 });
-  };
+  const listRef = useRef<List<RSSArticle>>(null);
 
   return (
-    <View testID="article-list-screen" style={{ flex: 1, padding: 16 }}>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Text style={{ fontSize: 20, fontWeight: "bold" }}>{title}</Text>
+    <Layout style={globalLayoutStyles.screen}>
+      <Card style={styles.card}>
+        <Text category="h5" style={styles.titleOnly}>
+          {title}
+        </Text>
+
         <Button
-          title={showOnlyUnread ? "Show All" : "Show Unread"}
+          appearance={showOnlyUnread ? "filled" : "outline"}
+          status="primary"
+          size="small"
           onPress={() => setShowOnlyUnread((prev) => !prev)}
-        />
-      </View>
+          style={styles.toggleButtonFull}
+        >
+          {showOnlyUnread ? "Show All" : "Show Unread"}
+        </Button>
 
+        {isLoading && !isFavoritesFeed && (
+          <Spinner style={styles.spinner} />
+        )}
+        {isError && !isFavoritesFeed && (
+          <Text status="danger">Failed to fetch articles.</Text>
+        )}
+      </Card>
 
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 8 }}>
-        <Button title="Back" onPress={() => navigation.goBack()} />
-        {!isFavoritesFeed && <Button title="Scroll to Top" onPress={scrollToTop} />}
-      </View>
-
-      {isLoading && !isFavoritesFeed && <Text>Loading...</Text>}
-      {isError && !isFavoritesFeed && <Text>Failed to fetch articles.</Text>}
-
-      <FlatList
+      <List
         ref={listRef}
         data={filteredArticles}
-        onRefresh={refetch}
         refreshing={isFetching}
-        keyExtractor={(item) => item.id}
+        onRefresh={refetch}
+        keyExtractor={(item, index) => item.id?.toString() || `article-${index}`}
         renderItem={({ item }) => (
-          <TouchableOpacity
-            onPress={() => handlePressArticle(item)}
-            style={{ opacity: isArticleRead(item.id) ? 0.5 : 1 }}
-          >
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <Text style={{ paddingVertical: 8 }}>
-                {item.title} {isFavorite(item.id) ? "⭐️" : ""}
-              </Text>
-              <Button
-                title={isFavorite(item.id) ? "Unfav" : "Fav"}
+          <ListItem
+            title={item.title}
+            onPress={() => {
+              navigation.navigate("Article", {
+                title: item.title,
+                url: item.url,
+              });
+              markAsRead(item);
+            }}
+            accessoryRight={() => (
+              <TouchableOpacity
                 onPress={() => toggleFavorite(item)}
-              />
-            </View>
-          </TouchableOpacity>
+                style={styles.favoriteButton}
+              >
+                <Icon
+                  name={isFavorite(item.id) ? "heart" : "heart-outline"}
+                  fill={isFavorite(item.id) ? "#c0392b" : "#ccc"}
+                  style={styles.icon}
+                />
+              </TouchableOpacity>
+            )}
+            style={[
+              styles.articleItem,
+              isArticleRead(item.id) && styles.articleItemRead,
+            ]}
+          />
         )}
+        style={styles.list}
       />
-    </View>
+    </Layout>
   );
 };
+
+const styles = StyleSheet.create({
+  card: {
+    backgroundColor: "rgba(255,255,255,0.85)",
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 16,
+  },
+  titleOnly: {
+    marginBottom: 12,
+    color: "#1e3c72",
+    fontWeight: "bold",
+  },
+  toggleButtonFull: {
+    marginBottom: 12,
+    borderRadius: 12,
+  },
+  spinner: {
+    alignSelf: "center",
+  },
+  list: {
+    backgroundColor: "transparent",
+  },
+  articleItem: {
+    borderRadius: 12,
+    marginVertical: 6,
+    backgroundColor: "rgba(255, 255, 255, 0.95)",
+    borderColor: "#e0e0e0",
+    borderWidth: 1,
+  },
+  articleItemRead: {
+    opacity: 0.5,
+  },
+  favoriteButton: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+  },
+  icon: {
+    width: 22,
+    height: 22,
+  },
+});
 
 export default ArticleListScreen;
