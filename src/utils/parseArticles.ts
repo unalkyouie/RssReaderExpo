@@ -1,8 +1,7 @@
-import { RSSArticle } from "~/types";
+import * as SecureStore from 'expo-secure-store';
+import { RSSArticle } from '~/types';
 
-import { storage } from "./Storage";
-
-export const parseArticles = (key: string): RSSArticle[] => {
-  const raw = storage.getString(key);
+export const parseArticles = async (key: string): Promise<RSSArticle[]> => {
+  const raw = await SecureStore.getItemAsync(key);
   return raw ? JSON.parse(raw) : [];
 };
