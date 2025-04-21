@@ -15,7 +15,7 @@ const createWrapper = (children: React.ReactNode) => {
 
 describe('AddFeedScreen', () => {
   it('adds feed and navigates back', () => {
-    const { navigation, route } = mockedNavigationProps<'AddFeed'>(undefined);
+    const { navigation, route } = mockedNavigationProps<'AddFeed'>({});
     const { getByTestId } = render(
       createWrapper(<AddFeedScreen navigation={navigation} route={route} />)
     );
