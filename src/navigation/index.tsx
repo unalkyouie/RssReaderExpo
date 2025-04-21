@@ -6,6 +6,7 @@ import AddFeedScreen from "../screens/AddFeedScreen";
 import ArticleScreen from "../screens/ArticleScreen";
 import FeedListScreen from "../screens/FeedListScreen";
 import { RootStackParamList } from "./types";
+import ArticleListScreen from "~/screens/ArticleListScreen";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -30,6 +31,11 @@ const MainNavigator = () => {
           name="Article"
           component={ArticleScreen}
           options={({ route }) => ({ title: route.params.title || "Article" })}
+        />
+          <Stack.Screen
+          name="ArticleList"
+          component={ArticleListScreen}
+          options={({ route }) => ({ title: route.params.title || "" })}
         />
       </Stack.Navigator>
     </NavigationContainer>
