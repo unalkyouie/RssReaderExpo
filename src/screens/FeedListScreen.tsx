@@ -2,7 +2,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React from "react";
 import { Button, FlatList, Text, TouchableOpacity, View } from "react-native";
 
-import { useFeeds } from "~/hooks/useFeeds";
+import { useFeeds } from "~/hooks/useLocalFeeds";
 
 import { RootStackParamList } from "../navigation/types";
 
