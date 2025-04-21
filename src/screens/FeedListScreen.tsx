@@ -1,19 +1,21 @@
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React from "react";
+import { Alert } from "react-native";
 import {
-  Alert,
-  Button,
-  FlatList,
+  Layout,
   Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+  Button,
+  List,
+  ListItem,
+} from "@ui-kitten/components";
 
-import { useDeleteFeed, useFeeds } from "~/hooks/useLocalFeeds";
 import { RootStackParamList } from "~/navigation/types";
-import { RSSFeed } from "~/types";
+import { useFeeds,  useDeleteFeed } from "~/hooks/useLocalFeeds";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import {  RSSFeed } from "~/types";
 
-type Props = NativeStackScreenProps<RootStackParamList, "Feeds">;
+
+type Props = NativeStackScreenProps<RootStackParamList, 'Feeds'>;
+
 
 const FeedListScreen = ({ navigation }: Props) => {
   const { data: feeds = [] } = useFeeds();
@@ -52,43 +54,32 @@ const FeedListScreen = ({ navigation }: Props) => {
   ];
 
   return (
-    <View style={{ flex: 1, padding: 16 }}>
-      <Text style={{ fontSize: 20, fontWeight: "bold" }}>Your Feeds</Text>
-
-      <FlatList
+    <Layout style={{ flex: 1, padding: 16 }}>
+      <Text category="h5">Your Feeds</Text>
+      <List
         data={allFeeds}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <TouchableOpacity
+          <ListItem
+            title={item.title}
             onPress={() => handleOpenFeed(item)}
-            style={{
-              paddingVertical: 12,
-              borderBottomWidth: 1,
-              borderColor: "#ccc",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-            testID={`feed-item-${item.id}`}
-          >
-            <Text>{item.title}</Text>
-            {item.id !== "favorites" && (
-              <View style={{ flexDirection: "row" }}>
-                <Button title="Edit" onPress={() => handleEdit(item)} />
-                <Button title="Delete" onPress={() => handleDelete(item.id)} />
-              </View>
-            )}
-          </TouchableOpacity>
+            accessoryRight={() =>
+              item.id !== "favorites" ? (
+                <Layout style={{ flexDirection: "row" }}>
+                  <Button size="tiny" onPress={() => handleEdit(item)} style={{ marginRight: 4 }}>Edit</Button>
+                  <Button size="tiny" status="danger" onPress={() => handleDelete(item.id)}>Delete</Button>
+                </Layout>
+              ) : <Text></Text>
+            }
+          />
         )}
       />
-
-      <Button
-        testID="add-feed-button"
-        title="Add Feed"
-        onPress={() => navigation.navigate("AddFeed", { feed: undefined })}
-      />
-    </View>
+      <Button onPress={() => navigation.navigate("AddFeed", { feed: undefined })} style={{ marginTop: 16 }}>
+        Add Feed
+      </Button>
+    </Layout>
   );
 };
+
 
 export default FeedListScreen;

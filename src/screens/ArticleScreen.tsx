@@ -1,44 +1,42 @@
-import { Ionicons } from "@expo/vector-icons";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React from "react";
-import { Button, Text, View } from "react-native";
+import {
+  Layout,
+  Text,
+  Button,
+  Icon,
+} from "@ui-kitten/components";
+import * as eva from "@eva-design/eva";
+
+import { RootStackParamList } from "~/navigation/types";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import useFavoriteArticles from "~/hooks/useFavoriteArticles";
 import { WebView } from "react-native-webview";
 
-import useFavoriteArticles from "~/hooks/useFavoriteArticles";
-import { RootStackParamList } from "~/navigation/types";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Article">;
 
-const ArticleScreen = ({ navigation, route }: Props) => {
+export const ArticleScreen = ({ navigation, route }: Props) => {
   const { url, title } = route.params;
   const { isFavorite, toggleFavorite } = useFavoriteArticles();
 
   return (
-    <View style={{ flex: 1 }}>
-      <View
-        style={{
-          padding: 16,
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <Text style={{ fontSize: 20, fontWeight: "bold", flex: 1 }}>
-          {title}
-        </Text>
-        <Ionicons
+    <Layout style={{ flex: 1 }}>
+      <Layout style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: 16 }}>
+        <Text category="h6" style={{ flex: 1 }}>{title}</Text>
+        <Icon
           name={isFavorite(url) ? "heart" : "heart-outline"}
-          size={24}
-          color="red"
-          onPress={() =>
-            toggleFavorite({ id: url, title, url, content: "", pubDate: "" })
-          }
+          fill="red"
+          style={{ width: 24, height: 24 }}
+          onPress={() => toggleFavorite({ id: url, title, url, content: "", pubDate: "" })}
         />
-      </View>
+      </Layout>
       <WebView source={{ uri: url }} style={{ flex: 1 }} />
-      <Button title="Back" onPress={() => navigation.goBack()} />
-    </View>
+      <Button onPress={() => navigation.goBack()} style={{ margin: 16 }}>
+        Back
+      </Button>
+    </Layout>
   );
 };
+
 
 export default ArticleScreen;
