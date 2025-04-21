@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useState } from 'react';
-import { RSSArticle } from '~/types';
-import { parseArticles } from '~/utils/parseArticles';
-import { storeArticles } from '~/utils/storeArticles';
+import { useCallback, useEffect, useState } from "react";
 
-const FAVORITES_KEY = 'favorite_articles';
+import { RSSArticle } from "~/types";
+import { parseArticles } from "~/utils/parseArticles";
+import { storeArticles } from "~/utils/storeArticles";
+
+const FAVORITES_KEY = "favorite_articles";
 
 const useFavoriteArticles = () => {
   const [favorites, setFavorites] = useState<RSSArticle[]>([]);
@@ -27,7 +28,7 @@ const useFavoriteArticles = () => {
 
   const isFavorite = useCallback(
     (id: string) => favorites.some((a) => a.id === id),
-    [favorites]
+    [favorites],
   );
 
   return { favorites, toggleFavorite, isFavorite };

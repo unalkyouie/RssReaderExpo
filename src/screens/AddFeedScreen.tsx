@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, Button, Alert } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '~/navigation/types';
-import { useAddFeed, useEditFeed } from '~/hooks/useLocalFeeds';
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import React, { useEffect, useState } from "react";
+import { Alert, Button, Text, TextInput, View } from "react-native";
 
-type Props = NativeStackScreenProps<RootStackParamList, 'AddFeed'>;
+import { useAddFeed, useEditFeed } from "~/hooks/useLocalFeeds";
+import { RootStackParamList } from "~/navigation/types";
+
+type Props = NativeStackScreenProps<RootStackParamList, "AddFeed">;
 
 const AddFeedScreen = ({ navigation, route }: Props) => {
   const feedToEdit = route.params?.feed;
 
-  const [title, setTitle] = useState('');
-  const [url, setUrl] = useState('');
+  const [title, setTitle] = useState("");
+  const [url, setUrl] = useState("");
 
   const { mutate: addFeed } = useAddFeed();
   const { mutate: editFeed } = useEditFeed();
@@ -25,7 +26,7 @@ const AddFeedScreen = ({ navigation, route }: Props) => {
   const validateUrl = (input: string) => {
     try {
       const u = new URL(input);
-      return u.protocol === 'http:' || u.protocol === 'https:';
+      return u.protocol === "http:" || u.protocol === "https:";
     } catch {
       return false;
     }
@@ -33,12 +34,12 @@ const AddFeedScreen = ({ navigation, route }: Props) => {
 
   const handleSave = () => {
     if (!title.trim() || !url.trim()) {
-      Alert.alert('Validation', 'Both fields are required.');
+      Alert.alert("Validation", "Both fields are required.");
       return;
     }
 
     if (!validateUrl(url)) {
-      Alert.alert('Validation', 'Please enter a valid URL.');
+      Alert.alert("Validation", "Please enter a valid URL.");
       return;
     }
 
@@ -54,7 +55,7 @@ const AddFeedScreen = ({ navigation, route }: Props) => {
   return (
     <View style={{ flex: 1, padding: 16 }}>
       <Text style={{ fontSize: 20, marginBottom: 16 }}>
-        {feedToEdit ? 'Edit Feed' : 'Add Feed'}
+        {feedToEdit ? "Edit Feed" : "Add Feed"}
       </Text>
 
       <TextInput
@@ -63,7 +64,7 @@ const AddFeedScreen = ({ navigation, route }: Props) => {
         onChangeText={setTitle}
         style={{
           borderWidth: 1,
-          borderColor: '#ccc',
+          borderColor: "#ccc",
           padding: 8,
           marginBottom: 12,
         }}
@@ -76,7 +77,7 @@ const AddFeedScreen = ({ navigation, route }: Props) => {
         keyboardType="url"
         style={{
           borderWidth: 1,
-          borderColor: '#ccc',
+          borderColor: "#ccc",
           padding: 8,
           marginBottom: 12,
         }}

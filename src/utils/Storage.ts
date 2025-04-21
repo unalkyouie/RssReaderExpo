@@ -1,9 +1,13 @@
-import { MMKV } from 'react-native-mmkv';
-import { RSSFeed } from '~/types';
+import { MMKV } from "react-native-mmkv";
 
-export const storage = new MMKV();
+import { RSSFeed } from "~/types";
 
-export const STORAGE_KEY_FEEDS = 'rss_feeds';
+export const storage = new MMKV({
+  id: "rss-expo-app",
+  encryptionKey: "rss-expo-app",
+});
+
+export const STORAGE_KEY_FEEDS = "rss_feeds";
 
 export const getStoredFeeds = (): RSSFeed[] => {
   const raw = storage.getString(STORAGE_KEY_FEEDS);
@@ -21,7 +25,7 @@ export const addFeed = (feed: RSSFeed) => {
 
 export const editFeed = (id: string, updated: Partial<RSSFeed>) => {
   const feeds = getStoredFeeds().map((f) =>
-    f.id === id ? { ...f, ...updated } : f
+    f.id === id ? { ...f, ...updated } : f,
   );
   saveFeeds(feeds);
 };
