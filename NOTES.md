@@ -13,13 +13,15 @@ GOAL:local storageof RSS subscriptions with clean UX.
 - tests for components and hooks - behaviour should be similar
 
 ## To Do: 
-- [ ] init Expo project
+- [x] init Expo project
 - [ ] install and set up MMKV
 - [ ] install and set up React Query
 - [ ] configure QueryClientProvider
 - [ ] implement usePersistedFeeds using MMKV
 - [ ] screen: list of subscribed feeds
+- [ ] screen: articles list
 - [ ] screen: add new feed
+- [ ] screen: article details
 - [ ] parse RSS data 
 - [ ] tests for hooks and components
 
