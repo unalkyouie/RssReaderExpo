@@ -1,37 +1,38 @@
-import React from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NavigationContainer } from '@react-navigation/native';
-import FeedListScreen from '../screens/FeedListScreen';
-import AddFeedScreen from '../screens/AddFeedScreen';
-import ArticleScreen from '../screens/ArticleScreen';
-import { RootStackParamList } from './types';
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import React from "react";
+
+import AddFeedScreen from "../screens/AddFeedScreen";
+import ArticleScreen from "../screens/ArticleScreen";
+import FeedListScreen from "../screens/FeedListScreen";
+import { RootStackParamList } from "./types";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-const MainNavigator=() =>{
+const MainNavigator = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName="Feeds"
-        screenOptions={{ headerTitleAlign: 'center' }}
+        screenOptions={{ headerTitleAlign: "center" }}
       >
         <Stack.Screen
           name="Feeds"
           component={FeedListScreen}
-          options={{ title: 'Your Feeds' }}
+          options={{ title: "Your Feeds" }}
         />
         <Stack.Screen
           name="AddFeed"
           component={AddFeedScreen}
-          options={{ title: 'Add New Feed' }}
+          options={{ title: "Add New Feed" }}
         />
         <Stack.Screen
           name="Article"
           component={ArticleScreen}
-          options={({ route }) => ({ title: route.params.title || 'Article' })}
+          options={({ route }) => ({ title: route.params.title || "Article" })}
         />
       </Stack.Navigator>
     </NavigationContainer>
   );
-}
+};
 export default MainNavigator;
