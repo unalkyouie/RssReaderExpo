@@ -1,14 +1,15 @@
-import React from 'react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import MainNavigator from './navigation/index';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import React from "react";
+
+import MainNavigator from "./navigation/index";
 
 const queryClient = new QueryClient();
 
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
-        <MainNavigator />
+      <MainNavigator />
     </QueryClientProvider>
   );
-}
-export default App
+};
+export default App;

@@ -1,11 +1,5 @@
-// src/utils/config.ts
-
-import { MMKV } from 'react-native-mmkv';
-import { QueryClient } from '@tanstack/react-query';
+import { MMKV } from "react-native-mmkv";
 
 export const storage = MMKV;
 
-export const STORAGE_KEY_FEEDS = 'rss_feeds';
-
-
-
+export const STORAGE_KEY_FEEDS = "rss_feeds";
