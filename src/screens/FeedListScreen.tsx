@@ -1,20 +1,21 @@
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import React from "react";
-import { Button, Text, View } from "react-native";
+import React from 'react';
+import { View, Text, Button } from 'react-native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../navigation/types';
 
-import { RootStackParamList } from "../navigation/types";
+type Props = NativeStackScreenProps<RootStackParamList, 'Feeds'>;
 
-type Props = NativeStackScreenProps<RootStackParamList, "Feeds">;
-
-export default function FeedListScreen({ navigation }: Props) {
+const FeedListScreen = ({ navigation }: Props) => {
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text testID="feed-list-title">Feed List Screen</Text>
+    <View testID="feed-list-screen">
+      <Text testID="feed-list-title">Your Feeds</Text>
       <Button
-        title="Go to Add Feed"
-        onPress={() => navigation.navigate("AddFeed")}
-        testID="button-add-feed"
+        testID="add-feed-button"
+        title="Add Feed"
+        onPress={() => navigation.navigate('AddFeed')}
       />
     </View>
   );
-}
+};
+
+export default FeedListScreen;
