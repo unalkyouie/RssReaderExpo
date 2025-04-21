@@ -1,24 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { Alert  } from "react-native";
+import { Alert, StyleSheet } from "react-native";
 import {
-  
   Layout,
   Text,
   Input,
   Button,
-  
+  Card,
 } from "@ui-kitten/components";
-
-
 import { RootStackParamList } from "~/navigation/types";
-import {  useAddFeed, useEditFeed } from "~/hooks/useLocalFeeds";
+import { useAddFeed, useEditFeed } from "~/hooks/useLocalFeeds";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-
-
+import { globalLayoutStyles } from "~/theme/layout";
+import { globalFormStyles } from "~/theme/forms";
 
 type Props = NativeStackScreenProps<RootStackParamList, "AddFeed">;
 
-export const AddFeedScreen = ({ navigation, route }: Props) => {
+const AddFeedScreen = ({ navigation, route }: Props) => {
   const feedToEdit = route.params?.feed;
   const [title, setTitle] = useState("");
   const [url, setUrl] = useState("");
@@ -62,12 +59,37 @@ export const AddFeedScreen = ({ navigation, route }: Props) => {
   };
 
   return (
-    <Layout style={{ flex: 1, padding: 16 }}>
-      <Text category="h5">{feedToEdit ? "Edit Feed" : "Add Feed"}</Text>
-      <Input label="Title" value={title} onChangeText={setTitle} style={{ marginBottom: 12 }} />
-      <Input label="URL" value={url} onChangeText={setUrl} autoCapitalize="none" keyboardType="url" style={{ marginBottom: 12 }} />
-      <Button onPress={handleSave}>Save</Button>
-      <Button appearance="ghost" status="basic" onPress={() => navigation.goBack()} style={{ marginTop: 8 }}>Cancel</Button>
+    <Layout style={globalLayoutStyles.screen}>
+      <Card style={globalFormStyles.card}>
+        <Text category="h5" style={globalFormStyles.title}>
+          {feedToEdit ? "Edit Feed" : "Add Feed"}
+        </Text>
+        <Input
+          label="Title"
+          value={title}
+          onChangeText={setTitle}
+          style={globalFormStyles.input}
+        />
+        <Input
+          label="URL"
+          value={url}
+          onChangeText={setUrl}
+          autoCapitalize="none"
+          keyboardType="url"
+          style={globalFormStyles.input}
+        />
+        <Button onPress={handleSave} style={globalFormStyles.button}>
+          Save
+        </Button>
+        <Button
+          appearance="ghost"
+          status="basic"
+          onPress={() => navigation.goBack()}
+          style={globalFormStyles.button}
+        >
+          Cancel
+        </Button>
+      </Card>
     </Layout>
   );
 };
