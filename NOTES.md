@@ -17,12 +17,12 @@ GOAL:local storageof RSS subscriptions with clean UX.
 - [x] install and set up MMKV
 - [x] install and set up React Query
 - [x] configure QueryClientProvider
-- [ ] implement usePersistedFeeds using MMKV
+- [x] implement usePersistedFeeds using MMKV
 - [x] screen: list of subscribed feeds
-- [ ] screen: articles list
+- [x] screen: articles list
 - [x] screen: add new feed
-- [ ] screen: article details
-- [ ] parse RSS data 
+- [x] screen: article details
+- [x] parse RSS data 
 - [ ] tests for hooks and components
 
 ## Challenges: 
