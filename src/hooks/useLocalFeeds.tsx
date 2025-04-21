@@ -21,6 +21,7 @@ export const useAddFeed = () => {
       const feeds = raw ? JSON.parse(raw) : [];
       const updated = [...feeds, newFeed];
       storage.set(STORAGE_KEY_FEEDS, JSON.stringify(updated));
+      return updated;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['feeds'] }),
   });
@@ -37,6 +38,7 @@ export const useEditFeed = () => {
         f.id === updatedFeed.id ? updatedFeed : f
       );
       storage.set(STORAGE_KEY_FEEDS, JSON.stringify(updated));
+      return updated;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['feeds'] }),
   });
@@ -51,6 +53,7 @@ export const useDeleteFeed = () => {
       const feeds = raw ? JSON.parse(raw) : [];
       const updated = feeds.filter((f: RSSFeed) => f.id !== feedId);
       storage.set(STORAGE_KEY_FEEDS, JSON.stringify(updated));
+      return updated;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['feeds'] }),
   });
