@@ -1,33 +1,36 @@
-import { useQuery } from "@tanstack/react-query";
-import Parser from "rss-parser";
+import { useQuery } from '@tanstack/react-query';
+import { RSSArticle } from '~/types';
+import { XMLParser } from 'fast-xml-parser';
 
-import { RSSArticle } from "~/types";
+const parser = new XMLParser({
+  ignoreAttributes: false,
+  attributeNamePrefix: '@_',
+});
 
-const parser = new Parser();
+const parseRssFeed = (xmlText: string): RSSArticle[] => {
+  const parsed = parser.parse(xmlText);
+  const items = parsed?.rss?.channel?.item ?? [];
+
+  return Array.isArray(items)
+    ? items.map((item: any) => ({
+        id: item.guid || item.link || Math.random().toString(),
+        title: item.title || 'No title',
+        url: item.link || '',
+        content: item.description || '',
+        pubDate: item.pubDate || new Date().toISOString(),
+      }))
+    : [];
+};
 
 const useArticlesByFeedUrl = (url: string) => {
   return useQuery<RSSArticle[]>({
-    queryKey: ["articles", url],
+    queryKey: ['articles', url],
     queryFn: async () => {
-      try {
-        const feed = await parser.parseURL(url);
-        return feed.items.map((item) => ({
-          id: item.guid || item.link || Math.random().toString(),
-          title: item.title || "No title",
-          url: item.link || "",
-          content: item.contentSnippet || "",
-          pubDate: item.pubDate
-            ? new Date(item.pubDate).toISOString()
-            : new Date().toISOString(),
-        }));
-      } catch (error) {
-        console.warn("Failed to fetch feed:", error);
-        return [];
-      }
+      const response = await fetch(url);
+      const text = await response.text();
+      return parseRssFeed(text);
     },
     enabled: !!url,
-    refetchOnWindowFocus: true,
-    staleTime: 1000 * 60 * 5,
   });
 };
 
