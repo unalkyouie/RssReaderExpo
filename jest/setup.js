@@ -1,5 +1,3 @@
-import 'react-native-gesture-handler/jestSetup';
-
 jest.mock('react-native-mmkv', () => ({
   MMKV: class {
     constructor() {}
