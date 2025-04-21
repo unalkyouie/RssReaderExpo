@@ -1,19 +1,21 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { storage, STORAGE_KEY_FEEDS } from '~/utils/Storage';
-import { RSSFeed } from '~/types';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
+import { RSSFeed } from "~/types";
+import { storage, STORAGE_KEY_FEEDS } from "~/utils/Storage";
 
 export const useFeeds = () => {
   return useQuery<RSSFeed[]>({
-    queryKey: ['feeds'],
+    queryKey: ["feeds"],
     queryFn: async () => {
       const raw = storage.getString(STORAGE_KEY_FEEDS);
       const favoritesFeed = {
-        id: 'favorites',
-        title: 'My Favorite Articles',
-        url: '',
+        id: "favorites",
+        title: "My Favorite Articles",
+        url: "",
       };
-      
-      return [...(raw ? JSON.parse(raw) : []), favoritesFeed];    },
+
+      return [...(raw ? JSON.parse(raw) : []), favoritesFeed];
+    },
   });
 };
 
@@ -28,7 +30,7 @@ export const useAddFeed = () => {
       storage.set(STORAGE_KEY_FEEDS, JSON.stringify(updated));
       return updated;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['feeds'] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["feeds"] }),
   });
 };
 
@@ -40,12 +42,12 @@ export const useEditFeed = () => {
       const raw = storage.getString(STORAGE_KEY_FEEDS);
       const feeds = raw ? JSON.parse(raw) : [];
       const updated = feeds.map((f: RSSFeed) =>
-        f.id === updatedFeed.id ? updatedFeed : f
+        f.id === updatedFeed.id ? updatedFeed : f,
       );
       storage.set(STORAGE_KEY_FEEDS, JSON.stringify(updated));
       return updated;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['feeds'] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["feeds"] }),
   });
 };
 
@@ -60,6 +62,6 @@ export const useDeleteFeed = () => {
       storage.set(STORAGE_KEY_FEEDS, JSON.stringify(updated));
       return updated;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['feeds'] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["feeds"] }),
   });
 };
